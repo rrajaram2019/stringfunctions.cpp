@@ -1,213 +1,158 @@
-// Copyright 2018 Soumya Nag Suman soumya@bu.edu
-// Copyright 2018 Rahul Rajaram rrajaram@bu.edu
+// Copyright 2019 rrajaram@bu.edu
+
 // error  output  is coded as follows:
+
 // w - is_word
 // p - is_palindrome
 // a - add
 // c - convertbase
 // m - multibase
+
 #include <iostream>
 #include <string>
 using std::string;
 using std::cerr;
 using std::cout;
 using std::cin;
-using std::stoi;
 
-
-bool iscapital(char x) {
-  if (x >= 'A' && x <= 'Z')
-    return 1;
-  else
-    return 0;
+bool islower(char c) {
+  return c - 'a' >= 0 and c - 'a' <= 25;
 }
+
+bool isupper(char c) {
+  return c - 'A' >= 0 and c - 'Z' <= 25;
+}
+
+bool isdigit(char c) {
+  return c - '0' >= 0 and c - '0' <= 9;
+}
+
 bool is_word(string s) {
-  bool isFirst = false;
-  int low = 0, upper = 0;
-  if (s.size() == 0)
-    return false;
-  for (int i = 0 ; i < s.size(); ++i) {
-    if (islower(s[i])) {
-      ++low;
-    } else if (isupper(s[i])) {
-      ++upper;
-    } else {
-      return false;
-    }
-  }
-  if (s.size() > 0 && iscapital(s[0]))
-    isFirst = true;
-  if (isFirst && upper == s.size()) {
+  // empty is not a word
+  if (s.empty()) return false;
+
+  // check for all letters
+  for (auto c : s)
+    if (not islower(c) and not isupper(c)) return false;
+
+  // one letter is a word
+  if (s.size() == 1) return true;
+
+  // check lower
+  if (islower(s[0])) {
+    for (auto c : s)
+      if (not islower(c)) return false;
     return true;
-  } else if (isFirst && low == s.size() - 1) {
-    return true;
-  } else if (upper == s.size()) {
-    return true;
-  } else if (low == s.size()) {
-    return true;
-  }
-  return false;
-}
-bool is_valid(string num) {
-  if (num.length() == 1 && num[0] == '0')
-    return false;
-  if (num[0] == '0')
-    return true;
-  for (int i = 0; i < num.length(); i++) {
-    if (!(num[i] >= '0' && num[i] <= '9'))
-      return true;
-  }
-  return false;
-}
-bool is_palindrome(string num, bool *error) {
-  int len = num.length();
-  int i = 0;
-  int index = 0;
-  int match = 0;
-  for (i; i < len; i++) {
-    if (isdigit(num[i])) {
-      index++;
-    }
-  }
-  if (len == index) {
-    if (index >> 1 && num[0] == '0') {
-      *error = true;
-      return false;
-    } else if (index == 1) {
-      *error = false;
-      return true;
-    } else if (index >> 1) {
-      i = 0;
-      for (i; i < index; i++) {
-        if (num[i] == num[index - i - 1]) {
-          match++;
-        }
-      }
-      if (match == index) {
-        *error = false;
-        return true;
-      } else {
-        *error = false;
-        return false;
-      }
-    }
-  } else {
-    *error = true;
-    return false;
-  }
-  return false;
-}
-string add(const string &num1, const string &num2) {
-  string result = "";
-  int carry = 0, sum, digit1, digit2;
-  char chr;
-  int index1 = num1.length() - 1;
-  int index2 = num2.length() - 1;
-  while (index1 >= 0 || index2 >= 0) {
-    digit1 = 0;
-    digit2 = 0;
-    if (index1 >= 0) {
-      digit1 = num1[index1] - '0';
-    }
-    if (index2 >= 0) {
-      digit2 = num2[index2] - '0';
-    }
-    sum = digit1 + digit2 + carry;
-    carry = 0;
-    if (sum > 9) {
-      carry = sum / 10;
-      sum = sum % 10;
-    }
-    chr = '0' + sum;
-    result = chr + result;
-    index1--;
-    index2--;
-  }
-  if (carry > 0) {
-    chr = '0' + carry;
-    result = chr + result;
-  }
-  return result;
-}
-string convertbase(const string& numstr, const int frombase, const int tobase) {
-  int length_numstr = numstr.size();
-  int power = 1;
-  int sum = 0;
-  int nextnum = 0;
-  int remainder = 0;
-  int i = 0;
-  string newbase = "";
-  for (i = length_numstr - 1; i >= 0; i--) {
-    sum += (numstr[i] - '0') * power;
-    power *= frombase;
-  }
-  while (sum != 0) {
-    nextnum = sum / tobase;
-    remainder = sum % tobase;
-    if (remainder == 10) {
-      string sremainder = ":";
-      newbase = sremainder + newbase;
-    } else if (remainder == 11) {
-      string sremainder = ";";
-      newbase = sremainder + newbase;
-    } else if (remainder == 12) {
-      string sremainder = "<";
-      newbase = sremainder + newbase;
-    } else if (remainder == 13) {
-      string sremainder = "=";
-      newbase = sremainder + newbase;
-    } else if (remainder == 14) {
-      string sremainder = ">";
-      newbase = sremainder + newbase;
-    } else if (remainder == 15) {
-      string sremainder = "?";
-      newbase = sremainder + newbase;
-    } else {
-      newbase = std::to_string(remainder) + newbase;
-    }
-    sum = nextnum;
-  }
-  return newbase;  // fix this line
-}
-bool my_is_palindrome(string num) {
-  int len = num.length();
-  char index;
-  for (int i = 0; i <= len / 2; i++) {
-    index = num.at(i);
-    if (index != num.at(len - i - 1)) {
-      return false;
-    }
+  } else {  // upper or capital, 2 thru n must match
+    bool match = islower(s[1]);
+    for (int i = 2; i < s.size(); i++)
+      if (islower(s[i]) != match) return false;
   }
   return true;
 }
-string multibase(int x) {
-  int num;
-  int remainder;
-  string strnum = "";
-  string nextnum = "";
-  string palinbase = "";
-  for (int i = 2; i < x; i++) {
-    num = x;
-    nextnum = "";
-    while (num != 0) {
-      remainder = num % i;
-      num = num / i;
-      strnum = remainder + '0';
-      nextnum = strnum + nextnum;
-    }
-    if (my_is_palindrome(nextnum)) {
-      palinbase += " " + std::to_string(i);
-    }
-  }
-  palinbase = palinbase.substr(1);
-  return palinbase;
+
+bool reversible(string num) {
+  for (int i = 0, j = num.size() - 1; i < j; i++, j--)
+    if (num[i] != num[j]) return false;
+  return true;
 }
+bool is_palindrome(string num, bool * error) {
+  *error = true;
+  // check for error conditions
+  if (num.empty() or (num[0] == '0' and num.size() > 1) )
+    return false;
+
+  // check for digits
+  for (auto c : num)
+    if (not isdigit(c))
+      return false;
+
+  // no errors, lets check palindromicity
+  *error = false;
+  return reversible(num);
+}
+
+
+void equalize(string *a, string *b, const string&num1, const string& num2) {
+  int diff = num1.size() - num2.size();
+  if (diff > 0) {
+    *a = num1;
+    *b = string(diff, '0') + num2;
+  } else if (diff < 0) {
+    *a = num2;
+    *b = string(-diff, '0') + num1;
+  } else {
+    *a = num1;
+    *b = num2;
+  }
+}
+
+string add(const string& num1, const string& num2) {
+  string a, b;
+  equalize(&a, &b, num1, num2);
+  string result(b.size(), '0');
+  int carry = 0;
+  int digit;
+  for (int i = a.size() - 1; i >= 0; i --) {
+    digit = a[i] + b[i] - '0' - '0' + carry;
+    carry = digit / 10;
+    digit = digit % 10;
+    result[i] += digit;
+  }
+  if (carry)
+    result = "1" + result;
+
+  return result;
+}
+
+
+string convertbase(const string& numstr, const int frombase, const int tobase) {
+  // num is a string in base frombase.
+  // return the same number as a string in tobase
+  // each digit is represented by the ASCII character digitvalue+'0'
+  int number = 0;
+  int factor = 1;
+  for (int i = numstr.size() - 1; i >= 0; i--) {
+    number += (numstr[i] - '0') * factor;
+    factor *= frombase;
+  }
+  string s;
+  char digit;
+  while (number > 0) {
+    digit = (number % tobase) + '0';
+    number /= tobase;
+    s = digit + s;
+  }
+  return s;
+}
+
+string multibase(int x) {
+  // return all the bases in which x is palindromic, from 2 to x-1 inclusive
+  // each palindromic base should be separated from the previous one by a space
+  string s = std::to_string(x);
+  string result;
+  for (int base = 2; base < x; base++) {
+    if (reversible(convertbase(s, 10, base)))
+      result += std::to_string(base) + " ";
+  }
+  return result.substr(0, result.size() - 1);
+}
+
 // leave this line and everything below as is
 int main() {
   bool error;
 
-  cerr << std::boolalpha;
   cout << std::boolalpha;
+
+  cout << "Quick Examples\n";
+  cout << "Word: " << is_word("Test") << "\n";
+  cout << "Pal: " << is_palindrome("123456777654321", &error) << "\n";
+  cout << "Add: " << add("123", "456") << "\n";
+  cout << "Convert: " << convertbase("1111", 2, 4) << "\n";
+  cout << "Multi: " << multibase(21) << "\n";
+
+  cout << "Now running basic tests, errors printed to stderr.\n";
+  cerr << std::boolalpha;
 
   // is_word basic tests
   if (not is_word("test")) cerr << "we1\n";
@@ -268,7 +213,7 @@ int main() {
   if (convertbase("azbc", 100, 10) != "49745051") cerr << "ce5\n";
 
   if (convertbase("azbc", 100, 2) != "10111101110000110010011011")
-    cerr << "ce6\n";
+    cerr << "be6\n";
 
   // multibase tests
 
@@ -277,11 +222,7 @@ int main() {
   if (multibase(63) != "2 4 8 20 62") cerr << "me3\n";
   if (multibase(10) != "3 4 9") cerr << "me4\n";
 
-
-  // ad-hoc tests from cin
-
   string asktype;
-  bool res;
   string userinput, num1, num2;
   int mbase, frombase, tobase;
 
@@ -293,8 +234,7 @@ int main() {
       cout << is_word(userinput) << "\n";
     } else if (asktype == "p") {  // p - is_palindrome
       std::cin >> userinput;
-      res = is_palindrome(userinput, &error);
-      cout << res << " " << error << "\n";
+      cout << is_palindrome(userinput, &error) << " " << error << "\n";
     } else if (asktype == "a") {  // a - add
       std::cin >> num1 >> num2;
       cout << add(num1, num2) << "\n";
@@ -308,5 +248,6 @@ int main() {
       return 0;
     }
   }
+
   return 0;
 }
