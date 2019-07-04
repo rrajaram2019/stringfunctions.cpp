@@ -6,9 +6,9 @@ that returns true is s is a word, and false otherwise.
 
 A word is defined as
 
-only having the characters a-zA-Z and nothing else
-all lowercase, capitalized or all uppercase (eg. test, Test, TEST)
-at least one character long
+only having the characters a-zA-Z and nothing else,
+ all lowercase, capitalized or all uppercase (eg. test, Test, TEST),
+ at least one character long
 
 3.2 Palindromic Number Strings
 
@@ -35,7 +35,8 @@ The values num1 and num2 can represent arbitrarily long integers, so all the cal
 
 There is no need to check for or deal with strings that do not represent non-negative integers.
 
-3.4 Converting base representation.
+3.4 Converting base representation
+
 Write a function convertbase which converts a number, represented as a string in one base, to a new string representing that number in a new base. You may assume that the number can be stored in an int without overflow.
 
 string convertbase(const string& numstr, const int frombase, const int tobase)
@@ -44,6 +45,7 @@ The character to represent a digit with value digitvalue is the ASCII character 
 The values of frombase and tobase will always be in the range 2 to 200 inclusive.
 
 3.5 Palindromic numbers in other bases
+
 Write a function multibase which returns all the bases in which an integer is a palindrome.
 
 Consider the number 21, which in base 10 is not a palindrome. However, if we write 21 in base 2, the result is 10101, which is a palindrome.
@@ -62,28 +64,35 @@ string multibase(int x)
 The function multibase returns all the bases in which x is palindromic, from 2 to x-1 inclusive. Each palindromic base should be separated from the previous one by a space.
 
 4 Further specifications
+
 4.1 How main() works
+
 The main() function provided runs a sequence of tests, and outputs to the standard error stream if it detects any problems.
 
 The error messages are coded using the first letter of each function:
 
 w for is_word()
+
 p for is_palindrome()
+
 a for add()
+
 c for convertbase()
+
 m for multibase()
+
 It then goes into an interactive mode, waiting for one of the commands:
 
 w for test is_word()
+
 p for test is_palindrome()
+
 a for test add()
+
 c for test convertbase()
+
 m for test multibase()
+
 The program then reads in the parameters from cin and outputs the results to cout.
 
 When a command other than wpacm is entered, the program quits.
-
-4.2 Restrictions
-In your submitted work (any of the functions you write) you should not print out anything to cout or cerr, and you should not use terminal input cin.
-
-You may only include the libraries iostream and string. No other includes are permitted.
