@@ -9,10 +9,13 @@ A word is defined as
 only having the characters a-zA-Z and nothing else
 all lowercase, capitalized or all uppercase (eg. test, Test, TEST)
 at least one character long
+
 3.2 Palindromic Number Strings
+
 Write a function is_palindrome with the following signature:
 
 bool is_palindrome(string num, bool * error)
+
 that returns true if num is a palindromic number string in base 10, and false otherwise.
 
 The function also must set the error condition *error, which should be true if num is not a valid positive integer.
@@ -22,6 +25,7 @@ So, if num contains any character other than 0-9 or if num contains leading zero
 The number “0” should return true and *error as false.
 
 3.3 Adding big integers
+
 Write a function that adds two non-negative integers represented as strings, returning the result as a string.
 
 The function must use the following signature:
